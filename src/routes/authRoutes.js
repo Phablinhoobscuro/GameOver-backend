@@ -1,21 +1,61 @@
 const express = require('express')
-
 const router = express.Router()
+
+const authController =
+    require('../controllers/authController')
 
 /**
  * @swagger
- * /auth/test:
- *   get:
- *     summary: Teste da rota de autenticação
+ * /auth/register:
+ *   post:
+ *     summary: Cadastrar usuário
  *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nome:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               senha:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Usuário criado com sucesso
+ */
+router.post(
+    '/register',
+    authController.register
+)
+
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     summary: Realizar login
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               senha:
+ *                 type: string
  *     responses:
  *       200:
- *         description: Rota funcionando
+ *         description: Login realizado com sucesso
  */
-router.get('/test', (req, res) => {
-    res.json({
-        message: 'Auth funcionando'
-    })
-})
+router.post(
+    '/login',
+    authController.login
+)
 
 module.exports = router

@@ -1,6 +1,6 @@
 # GameOver API 🎮
 
-API REST desenvolvida para o projeto **GameOver**, uma plataforma de gerenciamento de backlog de jogos, permitindo que usuários organizem os títulos que desejam jogar, estão jogando, finalizaram ou abandonaram.
+API REST desenvolvida para o projeto **GameOver**, uma plataforma para gerenciamento de backlog de jogos, permitindo que usuários organizem os títulos que desejam jogar, estão jogando, finalizaram ou abandonaram.
 
 ## Tecnologias Utilizadas
 
@@ -9,10 +9,11 @@ API REST desenvolvida para o projeto **GameOver**, uma plataforma de gerenciamen
 * PostgreSQL
 * Prisma ORM
 * Swagger (OpenAPI)
-* JWT
+* JWT (JSON Web Token)
 * BCrypt
 * CORS
 * Dotenv
+* Nodemon
 
 ---
 
@@ -30,7 +31,28 @@ O GameOver tem como objetivo permitir que usuários criem sua própria bibliotec
 
 ---
 
-## Estrutura Atual do Projeto
+## Funcionalidades Implementadas
+
+### Infraestrutura
+
+* Configuração do Express;
+* Integração com PostgreSQL;
+* ORM Prisma configurado;
+* Migrações automáticas com Prisma Migrate;
+* Documentação da API com Swagger;
+* Estrutura organizada em camadas (Routes, Controllers, Services e Config).
+
+### Autenticação
+
+* Cadastro de usuários;
+* Login de usuários;
+* Criptografia de senhas utilizando BCrypt;
+* Geração de tokens JWT;
+* Middleware de autenticação preparado para proteger rotas futuras.
+
+---
+
+## Estrutura do Projeto
 
 ```text
 gameover-backend/
@@ -45,14 +67,24 @@ gameover-backend/
 │   │   └── swagger.js
 │   │
 │   ├── controllers/
+│   │   └── authController.js
+│   │
 │   ├── middlewares/
+│   │   └── authMiddleware.js
+│   │
 │   ├── routes/
 │   │   ├── authRoutes.js
 │   │   └── gameRoutes.js
 │   │
 │   ├── services/
+│   │   └── authService.js
+│   │
+│   ├── utils/
+│   │   └── jwt.js
+│   │
 │   └── server.js
 │
+├── prisma/
 ├── .env
 ├── package.json
 └── README.md
@@ -61,8 +93,6 @@ gameover-backend/
 ---
 
 ## Banco de Dados
-
-O banco de dados foi modelado utilizando PostgreSQL e Prisma ORM.
 
 ### Entidade Usuario
 
@@ -99,39 +129,62 @@ O banco de dados foi modelado utilizando PostgreSQL e Prisma ORM.
 
 ---
 
-## Migrações
-
-A primeira migração foi criada e aplicada com sucesso utilizando Prisma Migrate.
-
-```bash
-npx prisma migrate dev --name init
-```
-
----
-
 ## Rotas Disponíveis
 
-### Auth
+### Autenticação
 
-#### GET /auth/test
+#### POST /auth/register
 
-Endpoint de teste para validação da rota de autenticação.
+Realiza o cadastro de um novo usuário.
+
+Exemplo:
+
+```json
+{
+  "nome": "Phablo",
+  "email": "phablo@email.com",
+  "senha": "123456"
+}
+```
 
 Resposta:
 
 ```json
 {
-  "message": "Auth funcionando"
+  "message": "Usuário criado com sucesso"
 }
 ```
 
 ---
 
-### Games
+#### POST /auth/login
+
+Realiza autenticação do usuário.
+
+Exemplo:
+
+```json
+{
+  "email": "phablo@email.com",
+  "senha": "123456"
+}
+```
+
+Resposta:
+
+```json
+{
+  "token": "jwt_token"
+}
+```
+
+---
+
+### Jogos
 
 #### GET /games/test
 
-Endpoint de teste para validação da rota de jogos.
+Endpoint de teste para validação das rotas de jogos.
 
 Resposta:
 
@@ -151,11 +204,15 @@ A documentação da API está disponível em:
 http://localhost:3000/api-docs
 ```
 
-Atualmente contém os endpoints de teste das rotas Auth e Games.
+O Swagger permite:
+
+* Visualizar todos os endpoints;
+* Testar requisições diretamente pelo navegador;
+* Consultar parâmetros e respostas da API.
 
 ---
 
-## Como Executar
+## Como Executar o Projeto
 
 ### Instalar dependências
 
@@ -173,36 +230,43 @@ JWT_SECRET="gameover_secret"
 PORT=3000
 ```
 
-### Executar a aplicação
+### Executar em modo desenvolvimento
 
 ```bash
 npm run dev
+```
+
+### Executar Prisma Studio
+
+```bash
+npx prisma studio
 ```
 
 ---
 
 ## Próximas Implementações
 
-### Autenticação
-
-* Cadastro de usuário
-* Login
-* JWT
-* Hash de senha com BCrypt
-
 ### Biblioteca de Jogos
 
-* Adicionar jogo à biblioteca
-* Atualizar status
-* Avaliar jogos
-* Favoritar jogos
-* Remover jogos
+* Adicionar jogo à biblioteca;
+* Atualizar status do jogo;
+* Remover jogo da biblioteca;
+* Favoritar jogos;
+* Registrar avaliações;
+* Registrar comentários;
+* Registrar horas jogadas.
 
-### Integração Externa
+### Integração com RAWG
 
-* Consumo da API RAWG
-* Pesquisa de jogos
-* Exibição de detalhes
+* Buscar jogos;
+* Exibir detalhes dos jogos;
+* Exibir capas e banners;
+* Exibir avaliações gerais da comunidade.
+
+### Segurança
+
+* Proteção das rotas de jogos com JWT;
+* Associação automática dos jogos ao usuário autenticado.
 
 ---
 
@@ -210,4 +274,20 @@ npm run dev
 
 🚧 Em desenvolvimento
 
-Fase atual: configuração da infraestrutura do backend, banco de dados e documentação da API.
+### Fase atual
+
+✅ Estrutura do backend concluída
+
+✅ Banco de dados modelado
+
+✅ Prisma configurado
+
+✅ Swagger configurado
+
+✅ Cadastro de usuários
+
+✅ Login com JWT
+
+✅ Criptografia de senhas com BCrypt
+
+🔄 Próxima etapa: proteção de rotas e integração com a API RAWG.
