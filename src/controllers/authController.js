@@ -46,8 +46,27 @@ async function login(req, res) {
         })
     }
 }
+async function me(req, res) {
+
+    try {
+
+        const usuario =
+            await authService.buscarPorId(
+                req.usuarioId
+            )
+
+        return res.json(usuario)
+
+    } catch (error) {
+
+        return res.status(400).json({
+            error: error.message
+        })
+    }
+}
 
 module.exports = {
     register,
-    login
+    login,
+    me
 }

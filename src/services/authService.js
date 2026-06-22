@@ -54,8 +54,27 @@ async function login(email, senha) {
         token
     }
 }
+async function buscarPorId(id) {
+
+    const usuario = await prisma.usuario.findUnique({
+        where: {
+            id
+        }
+    })
+
+    if (!usuario) {
+        throw new Error('Usuário não encontrado')
+    }
+
+    return {
+        id: usuario.id,
+        nome: usuario.nome,
+        email: usuario.email
+    }
+}
 
 module.exports = {
     register,
-    login
+    login,
+    buscarPorId
 }

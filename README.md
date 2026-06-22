@@ -40,7 +40,7 @@ O GameOver tem como objetivo permitir que usuários criem sua própria bibliotec
 * ORM Prisma configurado;
 * Migrações automáticas com Prisma Migrate;
 * Documentação da API com Swagger;
-* Estrutura organizada em camadas (Routes, Controllers, Services e Config).
+* Estrutura organizada em camadas (Routes, Controllers, Services, Middlewares e Config).
 
 ### Autenticação
 
@@ -48,7 +48,10 @@ O GameOver tem como objetivo permitir que usuários criem sua própria bibliotec
 * Login de usuários;
 * Criptografia de senhas utilizando BCrypt;
 * Geração de tokens JWT;
-* Middleware de autenticação preparado para proteger rotas futuras.
+* Middleware de autenticação;
+* Proteção de rotas privadas;
+* Endpoint para recuperar os dados do usuário autenticado (`/auth/me`);
+* Integração do Swagger com autenticação Bearer Token.
 
 ---
 
@@ -180,6 +183,24 @@ Resposta:
 
 ---
 
+#### GET /auth/me
+
+Retorna os dados do usuário autenticado.
+
+**Requer autenticação JWT.**
+
+Resposta:
+
+```json
+{
+  "id": 1,
+  "nome": "Phablo",
+  "email": "phablo@email.com"
+}
+```
+
+---
+
 ### Jogos
 
 #### GET /games/test
@@ -196,6 +217,20 @@ Resposta:
 
 ---
 
+## Segurança
+
+A API utiliza autenticação baseada em JWT (JSON Web Token).
+
+Fluxo de autenticação:
+
+1. Realizar login em `/auth/login`;
+2. Receber o token JWT;
+3. Utilizar o botão **Authorize** disponível no Swagger;
+4. Informar o token Bearer;
+5. Acessar endpoints protegidos.
+
+---
+
 ## Documentação Swagger
 
 A documentação da API está disponível em:
@@ -208,6 +243,7 @@ O Swagger permite:
 
 * Visualizar todos os endpoints;
 * Testar requisições diretamente pelo navegador;
+* Autenticar utilizando JWT através do botão **Authorize**;
 * Consultar parâmetros e respostas da API.
 
 ---
@@ -227,6 +263,7 @@ Arquivo `.env`
 ```env
 DATABASE_URL="postgresql://usuario:senha@localhost:5432/gameover"
 JWT_SECRET="gameover_secret"
+RAWG_API_KEY="sua_chave_rawg"
 PORT=3000
 ```
 
@@ -246,6 +283,13 @@ npx prisma studio
 
 ## Próximas Implementações
 
+### Integração com RAWG
+
+* Buscar jogos;
+* Exibir detalhes dos jogos;
+* Exibir capas e banners;
+* Exibir avaliações gerais da comunidade.
+
 ### Biblioteca de Jogos
 
 * Adicionar jogo à biblioteca;
@@ -256,17 +300,12 @@ npx prisma studio
 * Registrar comentários;
 * Registrar horas jogadas.
 
-### Integração com RAWG
+### Funcionalidades Sociais (Futuro)
 
-* Buscar jogos;
-* Exibir detalhes dos jogos;
-* Exibir capas e banners;
-* Exibir avaliações gerais da comunidade.
-
-### Segurança
-
-* Proteção das rotas de jogos com JWT;
-* Associação automática dos jogos ao usuário autenticado.
+* Perfil público;
+* Compartilhamento de avaliações;
+* Ranking pessoal de jogos;
+* Lista de favoritos.
 
 ---
 
@@ -274,20 +313,36 @@ npx prisma studio
 
 🚧 Em desenvolvimento
 
-### Fase atual
+### Concluído
 
-✅ Estrutura do backend concluída
+✅ Estrutura do backend
 
-✅ Banco de dados modelado
+✅ PostgreSQL configurado
 
-✅ Prisma configurado
+✅ Prisma ORM configurado
+
+✅ Migrações automáticas
 
 ✅ Swagger configurado
 
 ✅ Cadastro de usuários
 
-✅ Login com JWT
+✅ Login de usuários
 
 ✅ Criptografia de senhas com BCrypt
 
-🔄 Próxima etapa: proteção de rotas e integração com a API RAWG.
+✅ JWT
+
+✅ Middleware de autenticação
+
+✅ Endpoint protegido `/auth/me`
+
+✅ Integração do Swagger com Bearer Token
+
+### Próxima etapa
+
+🔄 Integração com a API RAWG
+
+🔄 Busca de jogos em tempo real
+
+🔄 Biblioteca pessoal do usuário

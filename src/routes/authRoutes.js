@@ -1,5 +1,7 @@
 const express = require('express')
 const router = express.Router()
+const autenticar =
+    require('../middlewares/authMiddleware')
 
 const authController =
     require('../controllers/authController')
@@ -56,6 +58,23 @@ router.post(
 router.post(
     '/login',
     authController.login
+)
+/**
+ * @swagger
+ * /auth/me:
+ *   get:
+ *     summary: Retorna usuário autenticado
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Usuário autenticado
+ */
+router.get(
+    '/me',
+    autenticar,
+    authController.me
 )
 
 module.exports = router
