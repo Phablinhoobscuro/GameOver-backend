@@ -25,6 +25,7 @@ async function listarBiblioteca(usuarioId) {
     })
 }
 
+
 module.exports = {
     adicionarJogo,
     listarBiblioteca
