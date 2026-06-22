@@ -11,6 +11,7 @@ API REST desenvolvida para o projeto **GameOver**, uma plataforma para gerenciam
 * Swagger (OpenAPI)
 * JWT (JSON Web Token)
 * BCrypt
+* Axios
 * CORS
 * Dotenv
 * Nodemon
@@ -39,7 +40,8 @@ O GameOver tem como objetivo permitir que usuários criem sua própria bibliotec
 * Integração com PostgreSQL;
 * ORM Prisma configurado;
 * Migrações automáticas com Prisma Migrate;
-* Documentação da API com Swagger;
+* Documentação da API com Swagger/OpenAPI;
+* Schemas reutilizáveis no Swagger;
 * Estrutura organizada em camadas (Routes, Controllers, Services, Middlewares e Config).
 
 ### Autenticação
@@ -52,6 +54,20 @@ O GameOver tem como objetivo permitir que usuários criem sua própria bibliotec
 * Proteção de rotas privadas;
 * Endpoint para recuperar os dados do usuário autenticado (`/auth/me`);
 * Integração do Swagger com autenticação Bearer Token.
+
+### Integração com RAWG
+
+* Busca de jogos em tempo real;
+* Consumo da API RAWG;
+* Retorno de nome, capa, nota e data de lançamento;
+* Endpoint protegido para pesquisa de jogos.
+
+### Biblioteca de Jogos
+
+* Adição de jogos à biblioteca pessoal;
+* Associação automática dos jogos ao usuário autenticado;
+* Persistência dos dados em PostgreSQL;
+* Listagem da biblioteca do usuário.
 
 ---
 
@@ -70,7 +86,8 @@ gameover-backend/
 │   │   └── swagger.js
 │   │
 │   ├── controllers/
-│   │   └── authController.js
+│   │   ├── authController.js
+│   │   └── gameController.js
 │   │
 │   ├── middlewares/
 │   │   └── authMiddleware.js
@@ -80,14 +97,15 @@ gameover-backend/
 │   │   └── gameRoutes.js
 │   │
 │   ├── services/
-│   │   └── authService.js
+│   │   ├── authService.js
+│   │   ├── gameService.js
+│   │   └── rawgService.js
 │   │
 │   ├── utils/
 │   │   └── jwt.js
 │   │
 │   └── server.js
 │
-├── prisma/
 ├── .env
 ├── package.json
 └── README.md
@@ -203,6 +221,69 @@ Resposta:
 
 ### Jogos
 
+#### GET /games/search
+
+Busca jogos na API RAWG.
+
+Parâmetro:
+
+```text
+?nome=zelda
+```
+
+Exemplo de resposta:
+
+```json
+[
+  {
+    "rawgId": 26824,
+    "titulo": "The Legend of Zelda: Skyward Sword",
+    "nota": 4.14,
+    "lancamento": "2011-11-20",
+    "capa": "https://..."
+  }
+]
+```
+
+---
+
+#### POST /games
+
+Adiciona um jogo à biblioteca do usuário autenticado.
+
+Exemplo:
+
+```json
+{
+  "rawgId": 26824,
+  "titulo": "The Legend of Zelda: Skyward Sword",
+  "capaUrl": "https://...",
+  "status": "BACKLOG"
+}
+```
+
+---
+
+#### GET /games/my-library
+
+Lista todos os jogos cadastrados pelo usuário autenticado.
+
+Exemplo:
+
+```json
+[
+  {
+    "id": 1,
+    "rawgId": 26824,
+    "titulo": "The Legend of Zelda: Skyward Sword",
+    "status": "BACKLOG",
+    "favorito": false
+  }
+]
+```
+
+---
+
 #### GET /games/test
 
 Endpoint de teste para validação das rotas de jogos.
@@ -244,6 +325,7 @@ O Swagger permite:
 * Visualizar todos os endpoints;
 * Testar requisições diretamente pelo navegador;
 * Autenticar utilizando JWT através do botão **Authorize**;
+* Utilizar schemas reutilizáveis para Usuários e Jogos;
 * Consultar parâmetros e respostas da API.
 
 ---
@@ -283,16 +365,8 @@ npx prisma studio
 
 ## Próximas Implementações
 
-### Integração com RAWG
-
-* Buscar jogos;
-* Exibir detalhes dos jogos;
-* Exibir capas e banners;
-* Exibir avaliações gerais da comunidade.
-
 ### Biblioteca de Jogos
 
-* Adicionar jogo à biblioteca;
 * Atualizar status do jogo;
 * Remover jogo da biblioteca;
 * Favoritar jogos;
@@ -300,12 +374,20 @@ npx prisma studio
 * Registrar comentários;
 * Registrar horas jogadas.
 
+### Integração RAWG
+
+* Buscar detalhes completos dos jogos;
+* Buscar plataformas;
+* Buscar gêneros;
+* Buscar screenshots;
+* Buscar banners.
+
 ### Funcionalidades Sociais (Futuro)
 
 * Perfil público;
 * Compartilhamento de avaliações;
-* Ranking pessoal de jogos;
-* Lista de favoritos.
+* Ranking pessoal;
+* Lista pública de favoritos.
 
 ---
 
@@ -325,6 +407,8 @@ npx prisma studio
 
 ✅ Swagger configurado
 
+✅ Schemas reutilizáveis no Swagger
+
 ✅ Cadastro de usuários
 
 ✅ Login de usuários
@@ -339,10 +423,20 @@ npx prisma studio
 
 ✅ Integração do Swagger com Bearer Token
 
+✅ Integração com a API RAWG
+
+✅ Busca de jogos em tempo real
+
+✅ Adição de jogos à biblioteca
+
+✅ Listagem da biblioteca do usuário
+
 ### Próxima etapa
 
-🔄 Integração com a API RAWG
+🔄 Atualização de status dos jogos
 
-🔄 Busca de jogos em tempo real
+🔄 Sistema de avaliações
 
-🔄 Biblioteca pessoal do usuário
+🔄 Favoritos
+
+🔄 Remoção de jogos da biblioteca
