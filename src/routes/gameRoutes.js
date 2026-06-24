@@ -149,5 +149,42 @@ router.get(
     autenticar,
     gameController.buscarJogos
 )
+/**
+ * @swagger
+ * /games/{id}/status:
+ *   patch:
+ *     summary: Atualizar status de um jogo
+ *     tags: [Games]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 enum:
+ *                   - BACKLOG
+ *                   - JOGANDO
+ *                   - FINALIZADO
+ *                   - ABANDONADO
+ *     responses:
+ *       200:
+ *         description: Status atualizado com sucesso
+ */
+router.patch(
+    '/:id/status',
+    autenticar,
+    gameController.atualizarStatus
+)
 
 module.exports = router

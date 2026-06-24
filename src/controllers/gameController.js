@@ -77,10 +77,44 @@ async function listarBiblioteca(req, res) {
         })
     }
 }
+async function atualizarStatus(req, res) {
+
+    try {
+
+        const { status } = req.body
+
+        const resultado =
+            await gameService.atualizarStatus(
+                req.params.id,
+                req.usuarioId,
+                status
+            )
+
+        if (resultado.count === 0) {
+
+            return res.status(404).json({
+                error: 'Jogo não encontrado'
+            })
+        }
+
+        return res.json({
+            message: 'Status atualizado'
+        })
+
+    } catch (error) {
+
+        console.error(error)
+
+        return res.status(500).json({
+            error: 'Erro ao atualizar status'
+        })
+    }
+}
 
 
 module.exports = {
     buscarJogos,
     adicionarJogo,
-    listarBiblioteca
+    listarBiblioteca,
+    atualizarStatus
 }

@@ -24,9 +24,27 @@ async function listarBiblioteca(usuarioId) {
         }
     })
 }
+async function atualizarStatus(
+    jogoId,
+    usuarioId,
+    status
+) {
+
+    return await prisma.jogoUsuario.updateMany({
+        where: {
+            id: Number(jogoId),
+            usuarioId
+        },
+
+        data: {
+            status
+        }
+    })
+}
 
 
 module.exports = {
     adicionarJogo,
-    listarBiblioteca
+    listarBiblioteca,
+    atualizarStatus
 }
