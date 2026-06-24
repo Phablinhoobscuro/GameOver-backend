@@ -397,12 +397,12 @@ npx prisma studio
 
 ### Biblioteca de Jogos
 
-* Adição de jogos à biblioteca pessoal;
-* Associação automática dos jogos ao usuário autenticado;
-* Persistência dos dados em PostgreSQL;
-* Listagem da biblioteca do usuário;
-* Atualização do status dos jogos;
-* Organização dos jogos por progresso (Backlog, Jogando, Finalizado e Abandonado).
+* Remover jogo da biblioteca;
+* Favoritar jogos;
+* Registrar avaliações;
+* Registrar comentários;
+* Registrar horas jogadas;
+* Editar informações da biblioteca.
 
 ### Integração RAWG
 
@@ -461,12 +461,14 @@ npx prisma studio
 
 ✅ Listagem da biblioteca do usuário
 
-### Próxima etapa
+✅ Atualização de status dos jogos
 
-🔄 Atualização de status dos jogos
+### Próxima etapa
 
 🔄 Sistema de avaliações
 
 🔄 Favoritos
+
+🔄 Registro de horas jogadas
 
 🔄 Remoção de jogos da biblioteca

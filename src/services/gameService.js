@@ -41,10 +41,29 @@ async function atualizarStatus(
         }
     })
 }
+async function avaliarJogo(
+    jogoId,
+    usuarioId,
+    nota,
+    comentario
+) {
 
+    return await prisma.jogoUsuario.updateMany({
+        where: {
+            id: Number(jogoId),
+            usuarioId
+        },
+
+        data: {
+            nota,
+            comentario
+        }
+    })
+}
 
 module.exports = {
     adicionarJogo,
     listarBiblioteca,
-    atualizarStatus
+    atualizarStatus,
+    avaliarJogo
 }

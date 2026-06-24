@@ -110,11 +110,56 @@ async function atualizarStatus(req, res) {
         })
     }
 }
+async function avaliarJogo(req, res) {
+
+    try {
+
+        const {
+            nota,
+            comentario
+        } = req.body
+
+        if (nota < 0 || nota > 5) {
+
+            return res.status(400).json({
+                error: 'A nota deve estar entre 0 e 5'
+            })
+        }
+
+        const resultado =
+            await gameService.avaliarJogo(
+                req.params.id,
+                req.usuarioId,
+                nota,
+                comentario
+            )
+
+        if (resultado.count === 0) {
+
+            return res.status(404).json({
+                error: 'Jogo não encontrado'
+            })
+        }
+
+        return res.json({
+            message: 'Avaliação salva com sucesso'
+        })
+
+    } catch (error) {
+
+        console.error(error)
+
+        return res.status(500).json({
+            error: 'Erro ao salvar avaliação'
+        })
+    }
+}
 
 
 module.exports = {
     buscarJogos,
     adicionarJogo,
     listarBiblioteca,
-    atualizarStatus
+    atualizarStatus,
+    avaliarJogo
 }

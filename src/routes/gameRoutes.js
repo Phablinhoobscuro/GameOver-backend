@@ -186,5 +186,66 @@ router.patch(
     autenticar,
     gameController.atualizarStatus
 )
+/**
+ * @swagger
+ * /games/{id}/review:
+ *   patch:
+ *     summary: Avaliar um jogo da biblioteca
+ *     description: Permite registrar ou atualizar a nota e comentário de um jogo pertencente ao usuário autenticado.
+ *     tags: [Games]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID do jogo na biblioteca do usuário
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - nota
+ *             properties:
+ *               nota:
+ *                 type: integer
+ *                 minimum: 0
+ *                 maximum: 5
+ *                 example: 5
+ *                 description: Nota atribuída ao jogo
+ *               comentario:
+ *                 type: string
+ *                 example: Um dos melhores jogos que já joguei.
+ *                 description: Comentário ou opinião do usuário sobre o jogo
+ *     responses:
+ *       200:
+ *         description: Avaliação salva com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Avaliação salva com sucesso
+ *       400:
+ *         description: Nota inválida
+ *       401:
+ *         description: Usuário não autenticado
+ *       404:
+ *         description: Jogo não encontrado
+ *       500:
+ *         description: Erro interno do servidor
+ */
+router.patch(
+    '/:id/review',
+    autenticar,
+    gameController.avaliarJogo
+)
 
 module.exports = router
