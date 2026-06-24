@@ -281,6 +281,36 @@ Exemplo:
   }
 ]
 ```
+---
+
+#### PATCH /games/{id}/status
+
+Atualiza o status de um jogo da biblioteca do usuário autenticado.
+
+Exemplo:
+
+```json
+{
+  "status": "JOGANDO"
+}
+```
+
+Valores permitidos:
+
+```text
+BACKLOG
+JOGANDO
+FINALIZADO
+ABANDONADO
+```
+
+Resposta:
+
+```json
+{
+  "message": "Status atualizado"
+}
+```
 
 ---
 
@@ -367,12 +397,12 @@ npx prisma studio
 
 ### Biblioteca de Jogos
 
-* Atualizar status do jogo;
-* Remover jogo da biblioteca;
-* Favoritar jogos;
-* Registrar avaliações;
-* Registrar comentários;
-* Registrar horas jogadas.
+* Adição de jogos à biblioteca pessoal;
+* Associação automática dos jogos ao usuário autenticado;
+* Persistência dos dados em PostgreSQL;
+* Listagem da biblioteca do usuário;
+* Atualização do status dos jogos;
+* Organização dos jogos por progresso (Backlog, Jogando, Finalizado e Abandonado).
 
 ### Integração RAWG
 
