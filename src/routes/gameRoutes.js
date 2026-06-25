@@ -89,8 +89,9 @@ router.post(
  *                     type: string
  *                     example: BACKLOG
  *                   nota:
- *                     type: integer
- *                     example: 5
+ *                     type: number
+ *                     format: float
+ *                     example: 4.5
  *                   comentario:
  *                     type: string
  *                     example: Excelente jogo
@@ -108,23 +109,6 @@ router.get(
     autenticar,
     gameController.listarBiblioteca
 )
-
-/**
- * @swagger
- * /games/test:
- *   get:
- *     summary: Teste da rota de jogos
- *     tags: [Games]
- *     responses:
- *       200:
- *         description: Games funcionando
- */
-router.get('/test', (req, res) => {
-    res.json({
-        message: 'Games funcionando'
-    })
-})
-
 /**
  * @swagger
  * /games/search:
@@ -180,6 +164,12 @@ router.get(
  *     responses:
  *       200:
  *         description: Status atualizado com sucesso
+ *       400:
+ *         description: Status inválido
+ *       401:
+ *         description: Não autorizado
+ *       404:
+ *         description: Jogo não encontrado
  */
 router.patch(
     '/:id/status',
@@ -213,10 +203,11 @@ router.patch(
  *               - nota
  *             properties:
  *               nota:
- *                 type: integer
+ *                 type: number
+ *                 format: float
  *                 minimum: 0
  *                 maximum: 5
- *                 example: 5
+ *                 example: 4.5
  *                 description: Nota atribuída ao jogo
  *               comentario:
  *                 type: string
@@ -225,14 +216,6 @@ router.patch(
  *     responses:
  *       200:
  *         description: Avaliação salva com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Avaliação salva com sucesso
  *       400:
  *         description: Nota inválida
  *       401:
@@ -246,6 +229,116 @@ router.patch(
     '/:id/review',
     autenticar,
     gameController.avaliarJogo
+)
+
+/**
+ * @swagger
+ * /games/{id}/favorite:
+ *   patch:
+ *     summary: Favoritar ou desfavoritar um jogo
+ *     tags: [Games]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - favorito
+ *             properties:
+ *               favorito:
+ *                 type: boolean
+ *                 example: true
+ *     responses:
+ *       200:
+ *         description: Favorito atualizado com sucesso
+ *       401:
+ *         description: Não autorizado
+ *       404:
+ *         description: Jogo não encontrado
+ */
+router.patch(
+    '/:id/favorite',
+    autenticar,
+    gameController.atualizarFavorito
+)
+
+/**
+ * @swagger
+ * /games/{id}/hours:
+ *   patch:
+ *     summary: Atualizar horas jogadas
+ *     tags: [Games]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - horasJogadas
+ *             properties:
+ *               horasJogadas:
+ *                 type: integer
+ *                 minimum: 0
+ *                 example: 120
+ *                 description: Total de horas jogadas pelo usuário
+ *     responses:
+ *       200:
+ *         description: Horas jogadas atualizadas com sucesso
+ *       401:
+ *         description: Não autorizado
+ *       404:
+ *         description: Jogo não encontrado
+ */
+router.patch(
+    '/:id/hours',
+    autenticar,
+    gameController.atualizarHorasJogadas
+)
+
+/**
+ * @swagger
+ * /games/{id}:
+ *   delete:
+ *     summary: Remover jogo da biblioteca
+ *     tags: [Games]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Jogo removido com sucesso
+ *       401:
+ *         description: Não autorizado
+ *       404:
+ *         description: Jogo não encontrado
+ */
+router.delete(
+    '/:id',
+    autenticar,
+    gameController.removerJogo
 )
 
 module.exports = router

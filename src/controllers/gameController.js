@@ -83,30 +83,20 @@ async function atualizarStatus(req, res) {
 
         const { status } = req.body
 
-        const resultado =
-            await gameService.atualizarStatus(
-                req.params.id,
-                req.usuarioId,
-                status
-            )
-
-        if (resultado.count === 0) {
-
-            return res.status(404).json({
-                error: 'Jogo não encontrado'
-            })
-        }
+        await gameService.atualizarStatus(
+            req.params.id,
+            req.usuarioId,
+            status
+        )
 
         return res.json({
-            message: 'Status atualizado'
+            message: 'Status atualizado com sucesso'
         })
 
     } catch (error) {
 
-        console.error(error)
-
-        return res.status(500).json({
-            error: 'Erro ao atualizar status'
+        return res.status(400).json({
+            error: error.message
         })
     }
 }
@@ -155,11 +145,79 @@ async function avaliarJogo(req, res) {
     }
 }
 
+async function atualizarFavorito(req, res) {
 
+    try {
+
+        const { favorito } = req.body
+
+        await gameService.atualizarFavorito(
+            req.params.id,
+            req.usuarioId,
+            favorito
+        )
+
+        return res.json({
+            message: 'Favorito atualizado com sucesso'
+        })
+
+    } catch (error) {
+
+        return res.status(400).json({
+            error: error.message
+        })
+    }
+}
+async function atualizarHorasJogadas(req, res) {
+
+    try {
+
+        const { horasJogadas } = req.body
+
+        await gameService.atualizarHorasJogadas(
+            req.params.id,
+            req.usuarioId,
+            horasJogadas
+        )
+
+        return res.json({
+            message: 'Horas jogadas atualizadas com sucesso'
+        })
+
+    } catch (error) {
+
+        return res.status(400).json({
+            error: error.message
+        })
+    }
+}
+async function removerJogo(req, res) {
+
+    try {
+
+        await gameService.removerJogo(
+            req.params.id,
+            req.usuarioId
+        )
+
+        return res.json({
+            message: 'Jogo removido com sucesso'
+        })
+
+    } catch (error) {
+
+        return res.status(400).json({
+            error: error.message
+        })
+    }
+}
 module.exports = {
     buscarJogos,
     adicionarJogo,
     listarBiblioteca,
     atualizarStatus,
-    avaliarJogo
+    avaliarJogo,
+    atualizarFavorito,
+    atualizarHorasJogadas,
+    removerJogo
 }

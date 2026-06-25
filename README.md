@@ -41,7 +41,6 @@ O GameOver tem como objetivo permitir que usuários criem sua própria bibliotec
 * ORM Prisma configurado;
 * Migrações automáticas com Prisma Migrate;
 * Documentação da API com Swagger/OpenAPI;
-* Schemas reutilizáveis no Swagger;
 * Estrutura organizada em camadas (Routes, Controllers, Services, Middlewares e Config).
 
 ### Autenticação
@@ -67,7 +66,13 @@ O GameOver tem como objetivo permitir que usuários criem sua própria bibliotec
 * Adição de jogos à biblioteca pessoal;
 * Associação automática dos jogos ao usuário autenticado;
 * Persistência dos dados em PostgreSQL;
-* Listagem da biblioteca do usuário.
+* Listagem da biblioteca do usuário;
+* Atualização de status dos jogos;
+* Sistema de avaliações com notas de 0 a 5 (suportando incrementos de 0.5);
+* Registro de comentários sobre jogos;
+* Sistema de favoritos;
+* Registro de horas jogadas;
+* Remoção de jogos da biblioteca.
 
 ---
 
@@ -135,7 +140,7 @@ gameover-backend/
 | titulo       | String  |
 | capaUrl      | String  |
 | status       | Enum    |
-| nota         | Int     |
+| nota         | Float   |
 | comentario   | String  |
 | horasJogadas | Int     |
 | favorito     | Boolean |
@@ -262,6 +267,14 @@ Exemplo:
 }
 ```
 
+Resposta:
+
+```json
+{
+  "message": "Jogo adicionado com sucesso"
+}
+```
+
 ---
 
 #### GET /games/my-library
@@ -277,15 +290,19 @@ Exemplo:
     "rawgId": 26824,
     "titulo": "The Legend of Zelda: Skyward Sword",
     "status": "BACKLOG",
-    "favorito": false
+    "nota": 4.5,
+    "comentario": "Excelente jogo",
+    "horasJogadas": 80,
+    "favorito": true
   }
 ]
 ```
+
 ---
 
 #### PATCH /games/{id}/status
 
-Atualiza o status de um jogo da biblioteca do usuário autenticado.
+Atualiza o status de um jogo da biblioteca.
 
 Exemplo:
 
@@ -309,6 +326,87 @@ Resposta:
 ```json
 {
   "message": "Status atualizado"
+}
+```
+
+---
+
+#### PATCH /games/{id}/review
+
+Registra ou atualiza a avaliação de um jogo.
+
+Exemplo:
+
+```json
+{
+  "nota": 4.5,
+  "comentario": "Um dos melhores jogos que já joguei."
+}
+```
+
+Resposta:
+
+```json
+{
+  "message": "Avaliação salva com sucesso"
+}
+```
+
+---
+
+#### PATCH /games/{id}/favorite
+
+Favorita ou desfavorita um jogo da biblioteca.
+
+Exemplo:
+
+```json
+{
+  "favorito": true
+}
+```
+
+Resposta:
+
+```json
+{
+  "message": "Favorito atualizado"
+}
+```
+
+---
+
+#### PATCH /games/{id}/hours
+
+Atualiza o total de horas jogadas.
+
+Exemplo:
+
+```json
+{
+  "horasJogadas": 120
+}
+```
+
+Resposta:
+
+```json
+{
+  "message": "Horas jogadas atualizadas"
+}
+```
+
+---
+
+#### DELETE /games/{id}
+
+Remove um jogo da biblioteca.
+
+Resposta:
+
+```json
+{
+  "message": "Jogo removido com sucesso"
 }
 ```
 
@@ -355,8 +453,8 @@ O Swagger permite:
 * Visualizar todos os endpoints;
 * Testar requisições diretamente pelo navegador;
 * Autenticar utilizando JWT através do botão **Authorize**;
-* Utilizar schemas reutilizáveis para Usuários e Jogos;
-* Consultar parâmetros e respostas da API.
+* Consultar parâmetros, exemplos de requisição e respostas da API;
+* Testar todos os endpoints diretamente pela interface.
 
 ---
 
@@ -397,12 +495,11 @@ npx prisma studio
 
 ### Biblioteca de Jogos
 
-* Remover jogo da biblioteca;
-* Favoritar jogos;
-* Registrar avaliações;
-* Registrar comentários;
-* Registrar horas jogadas;
-* Editar informações da biblioteca.
+* Filtrar jogos por status;
+* Ordenação por nota, nome ou data de cadastro;
+* Buscar jogos dentro da biblioteca;
+* Dashboard com estatísticas da coleção;
+* Histórico de progresso dos jogos.
 
 ### Integração RAWG
 
@@ -410,6 +507,7 @@ npx prisma studio
 * Buscar plataformas;
 * Buscar gêneros;
 * Buscar screenshots;
+* Buscar trailers;
 * Buscar banners.
 
 ### Funcionalidades Sociais (Futuro)
@@ -417,7 +515,8 @@ npx prisma studio
 * Perfil público;
 * Compartilhamento de avaliações;
 * Ranking pessoal;
-* Lista pública de favoritos.
+* Lista pública de favoritos;
+* Sistema de seguidores.
 
 ---
 
@@ -436,8 +535,6 @@ npx prisma studio
 ✅ Migrações automáticas
 
 ✅ Swagger configurado
-
-✅ Schemas reutilizáveis no Swagger
 
 ✅ Cadastro de usuários
 
@@ -463,12 +560,26 @@ npx prisma studio
 
 ✅ Atualização de status dos jogos
 
+✅ Sistema de avaliações (0 a 5 com suporte a 0.5)
+
+✅ Registro de comentários
+
+✅ Sistema de favoritos
+
+✅ Registro de horas jogadas
+
+✅ Remoção de jogos da biblioteca
+
+✅ Documentação completa no Swagger
+
 ### Próxima etapa
 
-🔄 Sistema de avaliações
+🔄 Filtros e pesquisa na biblioteca
 
-🔄 Favoritos
+🔄 Dashboard de estatísticas
 
-🔄 Registro de horas jogadas
+🔄 Detalhes completos dos jogos via RAWG
 
-🔄 Remoção de jogos da biblioteca
+🔄 Plataformas, gêneros e screenshots
+
+🔄 Sistema social de perfis públicos
