@@ -61,10 +61,14 @@ async function listarBiblioteca(req, res) {
 
     try {
 
+        const { status, search, sort } = req.query
+
         const jogos =
             await gameService.listarBiblioteca(
                 req.usuarioId,
-                req.query
+                status,
+                search,
+                sort
             )
 
         return res.json(jogos)
@@ -212,6 +216,48 @@ async function removerJogo(req, res) {
         })
     }
 }
+async function descobrirJogos(req, res) {
+
+    try {
+
+        const page =
+            Number(req.query.page) || 1
+
+        const resultado =
+            await rawgService.descobrirJogos(page)
+
+        return res.json(resultado)
+
+    } catch (error) {
+
+        console.error(error)
+
+        return res.status(500).json({
+            error: 'Erro ao buscar jogos'
+        })
+    }
+}
+
+async function buscarDetalhesRawg(req, res) {
+
+    try {
+
+        const { rawgId } = req.params
+
+        const jogo =
+            await gameService.buscarDetalhesRawg(rawgId)
+
+        return res.json(jogo)
+
+    } catch (error) {
+
+        console.error(error)
+
+        return res.status(500).json({
+            error: 'Erro ao buscar detalhes do jogo'
+        })
+    }
+}
 module.exports = {
     buscarJogos,
     adicionarJogo,
@@ -220,5 +266,7 @@ module.exports = {
     avaliarJogo,
     atualizarFavorito,
     atualizarHorasJogadas,
-    removerJogo
+    removerJogo,
+    descobrirJogos,
+    buscarDetalhesRawg
 }

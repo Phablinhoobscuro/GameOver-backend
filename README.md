@@ -57,8 +57,10 @@ O GameOver tem como objetivo permitir que usuários criem sua própria bibliotec
 ### Integração com RAWG
 
 * Busca de jogos em tempo real;
+* Busca de detalhes completos de jogos;
 * Consumo da API RAWG;
 * Retorno de nome, capa, nota e data de lançamento;
+* Retorno de descrição, plataformas e gêneros;
 * Endpoint protegido para pesquisa de jogos.
 
 ### Biblioteca de Jogos
@@ -67,6 +69,8 @@ O GameOver tem como objetivo permitir que usuários criem sua própria bibliotec
 * Associação automática dos jogos ao usuário autenticado;
 * Persistência dos dados em PostgreSQL;
 * Listagem da biblioteca do usuário;
+* Filtro por status;
+* Prevenção de jogos duplicados na biblioteca;
 * Atualização de status dos jogos;
 * Sistema de avaliações com notas de 0 a 5 (suportando incrementos de 0.5);
 * Registro de comentários sobre jogos;
@@ -249,9 +253,41 @@ Exemplo de resposta:
   }
 ]
 ```
+#### GET /games/details/{rawgId}
+
+Retorna informações completas de um jogo diretamente da API RAWG.
+
+Exemplo:
+
+GET /games/details/22511
+
+Resposta:
+
+```json
+{
+  "id": 22511,
+  "name": "The Legend of Zelda: Breath of the Wild",
+  "description": "...",
+  "background_image": "https://...",
+  "rating": 4.68,
+  "released": "2017-03-03",
+  "genres": [
+    {
+      "id": 4,
+      "name": "Action"
+    }
+  ],
+  "platforms": [
+    {
+      "platform": {
+        "name": "Nintendo Switch"
+      }
+    }
+  ]
+}
 
 ---
-
+```
 #### POST /games
 
 Adiciona um jogo à biblioteca do usuário autenticado.
@@ -296,6 +332,17 @@ Exemplo:
     "favorito": true
   }
 ]
+Também permite filtrar por status.
+
+Exemplos:
+
+GET /games/my-library
+
+GET /games/my-library?status=JOGANDO
+
+GET /games/my-library?status=FINALIZADO
+
+GET /games/my-library?status=BACKLOG
 ```
 
 ---

@@ -9,6 +9,32 @@ const gameController =
 
 /**
  * @swagger
+ * /games/discover:
+ *   get:
+ *     summary: Descobrir jogos populares
+ *     description: Retorna uma lista paginada de jogos populares da API RAWG.
+ *     tags: [Games]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Página desejada
+ *     responses:
+ *       200:
+ *         description: Jogos encontrados com sucesso
+ *       401:
+ *         description: Não autorizado
+ */
+    router.get(
+    '/discover',
+    gameController.descobrirJogos
+)
+    /**
+ * @swagger
  * /games:
  *   post:
  *     summary: Adicionar jogo à biblioteca do usuário
@@ -61,7 +87,7 @@ router.post(
  * /games/my-library:
  *   get:
  *     summary: Listar biblioteca do usuário autenticado
- *     description: Retorna todos os jogos cadastrados pelo usuário autenticado. É possível filtrar por status.
+ *     description: Retorna todos os jogos cadastrados pelo usuário autenticado. É possível filtrar por status, pesquisar pelo título e definir a ordenação dos resultados.
  *     tags: [Games]
  *     security:
  *       - bearerAuth: []
@@ -77,6 +103,29 @@ router.post(
  *             - FINALIZADO
  *             - ABANDONADO
  *         description: Filtrar jogos por status
+ *
+ *       - in: query
+ *         name: search
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Buscar jogos pelo título (busca parcial, não diferencia maiúsculas/minúsculas)
+ *         example: zelda
+ *
+ *       - in: query
+ *         name: sort
+ *         required: false
+ *         schema:
+ *           type: string
+ *           enum:
+ *             - recent
+ *             - oldest
+ *             - title
+ *             - rating
+ *             - favorites
+ *         description: Ordenação dos resultados
+ *         example: rating
+ *
  *     responses:
  *       200:
  *         description: Biblioteca retornada com sucesso
@@ -123,9 +172,11 @@ router.post(
  *                   createdAt:
  *                     type: string
  *                     format: date-time
+ *                     example: 2026-06-25T10:30:00.000Z
  *                   updatedAt:
  *                     type: string
  *                     format: date-time
+ *                     example: 2026-06-25T12:15:00.000Z
  *       401:
  *         description: Não autorizado
  */
@@ -133,6 +184,36 @@ router.get(
     '/my-library',
     autenticar,
     gameController.listarBiblioteca
+)
+/**
+ * @swagger
+ * /games/rawg/{rawgId}:
+ *   get:
+ *     summary: Buscar detalhes de um jogo na RAWG
+ *     description: Retorna detalhes completos de um jogo da API RAWG pelo ID.
+ *     tags: [Games]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: rawgId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do jogo na RAWG
+ *         example: 3498
+ *     responses:
+ *       200:
+ *         description: Detalhes do jogo retornados com sucesso
+ *       401:
+ *         description: Não autorizado
+ *       500:
+ *         description: Erro ao buscar detalhes do jogo
+ */
+router.get(
+    '/rawg/:rawgId',
+    autenticar,
+    gameController.buscarDetalhesRawg
 )
 /**
  * @swagger

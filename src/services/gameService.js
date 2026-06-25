@@ -1,4 +1,5 @@
 const prisma = require('../config/prisma')
+const rawgService = require('./rawgService')
 
 async function adicionarJogo(usuarioId, dados) {
 
@@ -12,25 +13,67 @@ async function adicionarJogo(usuarioId, dados) {
         }
     })
 }
-
 async function listarBiblioteca(
     usuarioId,
-    filtros = {}
+    status,
+    search,
+    sort
 ) {
 
     const where = {
         usuarioId
     }
 
-    if (filtros.status) {
-        where.status = filtros.status
+    if (status) {
+        where.status = status
+    }
+
+    if (search) {
+        where.titulo = {
+            contains: search,
+            mode: 'insensitive'
+        }
+    }
+
+    let orderBy = {
+        createdAt: 'desc'
+    }
+
+    switch (sort) {
+
+        case 'oldest':
+            orderBy = {
+                createdAt: 'asc'
+            }
+            break
+
+        case 'title':
+            orderBy = {
+                titulo: 'asc'
+            }
+            break
+
+        case 'rating':
+            orderBy = {
+                nota: 'desc'
+            }
+            break
+
+        case 'favorites':
+            orderBy = {
+                favorito: 'desc'
+            }
+            break
+
+        default:
+            orderBy = {
+                createdAt: 'desc'
+            }
     }
 
     return await prisma.jogoUsuario.findMany({
         where,
-        orderBy: {
-            createdAt: 'desc'
-        }
+        orderBy
     })
 }
 async function atualizarStatus(
@@ -153,6 +196,14 @@ async function removerJogo(
 
     return resultado
 }
+async function buscarDetalhesRawg(rawgId) {
+
+    if (!rawgId) {
+        throw new Error('ID do jogo é obrigatório')
+    }
+
+    return await rawgService.buscarDetalhesJogo(rawgId)
+}
 
 module.exports = {
     adicionarJogo,
@@ -161,5 +212,6 @@ module.exports = {
     avaliarJogo,
     atualizarFavorito,
     atualizarHorasJogadas,
-    removerJogo
+    removerJogo,
+    buscarDetalhesRawg
 }
