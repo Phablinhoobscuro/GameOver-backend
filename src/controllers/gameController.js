@@ -63,7 +63,8 @@ async function listarBiblioteca(req, res) {
 
         const jogos =
             await gameService.listarBiblioteca(
-                req.usuarioId
+                req.usuarioId,
+                req.query
             )
 
         return res.json(jogos)

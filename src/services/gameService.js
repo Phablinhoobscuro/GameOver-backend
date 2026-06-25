@@ -13,12 +13,21 @@ async function adicionarJogo(usuarioId, dados) {
     })
 }
 
-async function listarBiblioteca(usuarioId) {
+async function listarBiblioteca(
+    usuarioId,
+    filtros = {}
+) {
+
+    const where = {
+        usuarioId
+    }
+
+    if (filtros.status) {
+        where.status = filtros.status
+    }
 
     return await prisma.jogoUsuario.findMany({
-        where: {
-            usuarioId
-        },
+        where,
         orderBy: {
             createdAt: 'desc'
         }

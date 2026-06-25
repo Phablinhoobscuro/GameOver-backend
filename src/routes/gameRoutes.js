@@ -61,9 +61,22 @@ router.post(
  * /games/my-library:
  *   get:
  *     summary: Listar biblioteca do usuário autenticado
+ *     description: Retorna todos os jogos cadastrados pelo usuário autenticado. É possível filtrar por status.
  *     tags: [Games]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: status
+ *         required: false
+ *         schema:
+ *           type: string
+ *           enum:
+ *             - BACKLOG
+ *             - JOGANDO
+ *             - FINALIZADO
+ *             - ABANDONADO
+ *         description: Filtrar jogos por status
  *     responses:
  *       200:
  *         description: Biblioteca retornada com sucesso
@@ -85,8 +98,14 @@ router.post(
  *                     example: The Legend of Zelda Skyward Sword
  *                   capaUrl:
  *                     type: string
+ *                     example: https://media.rawg.io/media/games/884/imagem.jpg
  *                   status:
  *                     type: string
+ *                     enum:
+ *                       - BACKLOG
+ *                       - JOGANDO
+ *                       - FINALIZADO
+ *                       - ABANDONADO
  *                     example: BACKLOG
  *                   nota:
  *                     type: number
@@ -101,6 +120,12 @@ router.post(
  *                   favorito:
  *                     type: boolean
  *                     example: true
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                   updatedAt:
+ *                     type: string
+ *                     format: date-time
  *       401:
  *         description: Não autorizado
  */
